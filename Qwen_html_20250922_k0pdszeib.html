@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vẽ Đồ Thị Hàm Số Bậc 2 & Bậc 3</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f9f9f9;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            min-width: 300px;
+        }
+        .graph {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            flex: 1;
+            min-width: 500px;
+            text-align: center;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            background: #fff;
+            margin-top: 15px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        input[type="range"], input[type="number"] {
+            width: 100%;
+            margin-top: 5px;
+        }
+        select {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .coef-group {
+            margin: 10px 0;
+        }
+        .coef-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>📈 Vẽ Đồ Thị Hàm Số Bậc 2 & Bậc 3</h1>
+
+    <div class="container">
+        <!-- Bảng điều khiển -->
+        <div class="controls">
+            <label for="functionType">Chọn loại hàm số:</label>
+            <select id="functionType">
+                <option value="quadratic">Hàm bậc 2: y = ax² + bx + c</option>
+                <option value="cubic">Hàm bậc 3: y = ax³ + bx² + cx + d</option>
+            </select>
+
+            <!-- Hệ số cho bậc 2 -->
+            <div id="quadraticInputs">
+                <div class="coef-group">
+                    <label for="a2">Hệ số a:</label>
+                    <input type="range" id="a2Slider" min="-5" max="5" step="1" value="1">
+                    <input type="number" id="a2Input" value="1" min="-10" max="10" step="1">
+                    <div class="coef-label">
+                        <span>a = -5</span>
+                        <span>a = 5</span>
+                    </div>
+                </div>
+                <div class="coef-group">
+                    <label for="b2">Hệ số b:</label>
+                    <input type="range" id="b2Slider" min="-5" max="5" step="1" value="0">
+                    <input type="number" id="b2Input" value="0" min="-10" max="10" step="1">
+                    <div class="coef-label">
+                        <span>b = -5</span>
+                        <span>b = 5</span>
+                    </div>
+                </div>
+                <div class="coef-group">
+                    <label for="c2">Hệ số c:</label>
+                    <input type="range" id="c2Slider" min="-5" max="5" step="1" value="0">
+                    <input type="number" id="c2Input" value="0" min="-10" max="10" step="1">
+                    <div class="coef-label">
+                        <span>c = -5</span>
+                        <span>c = 5</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hệ số cho bậc 3 -->
+            <div id="cubicInputs" style="display: none;">
+                <div class="coef-group">
+                    <label for="a3">Hệ số a:</label>
+                    <input type="range" id="a3Slider" min="-3" max="3" step="1" value="1">
+                    <input type="number" id="a3Input" value="1" min="-5" max="5" step="1">
+                    <div class="coef-label">
+                        <span>a = -3</span>
+                        <span>a = 3</span>
+                    </div>
+                </div>
+                <div class="coef-group">
+                    <label for="b3">Hệ số b:</label>
+                    <input type="range" id="b3Slider" min="-5" max="5" step="1" value="0">
+                    <input type="number" id="b3Input" value="0" min="-10" max="10" step="1">
+                    <div class="coef-label">
+                        <span>b = -5</span>
+                        <span>b = 5</span>
+                    </div>
+                </div>
+                <div class="coef-group">
+                    <label for="c3">Hệ số c:</label>
+                    <input type="range" id="c3Slider" min="-5" max="5" step="1" value="0">
+                    <input type="number" id="c3Input" value="0" min="-10" max="10" step="1">
+                    <div class="coef-label">
+                        <span>c = -5</span>
+                        <span>c = 5</span>
+                    </div>
+                </div>
+                <div class="coef-group">
+                    <label for="d3">Hệ số d:</label>
+                    <input type="range" id="d3Slider" min="-5" max="5" step="1" value="0">
+                    <input type="number" id="d3Input" value="0" min="-10" max="10" step="1">
+                    <div class="coef-label">
+                        <span>d = -5</span>
+                        <span>d = 5</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vùng vẽ đồ thị -->
+        <div class="graph">
+            <h2>Đồ thị hàm số</h2>
+            <canvas id="graphCanvas" width="600" height="400"></canvas>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('graphCanvas');
+            const ctx = canvas.getContext('2d');
+            const functionTypeSelect = document.getElementById('functionType');
+            const quadraticInputs = document.getElementById('quadraticInputs');
+            const cubicInputs = document.getElementById('cubicInputs');
+
+            // Đồng bộ slider và input number
+            function syncSliderAndInput(sliderId, inputId) {
+                const slider = document.getElementById(sliderId);
+                const input = document.getElementById(inputId);
+
+                slider.addEventListener('input', () => {
+                    input.value = slider.value;
+                    drawGraph();
+                });
+
+                input.addEventListener('input', () => {
+                    slider.value = input.value;
+                    drawGraph();
+                });
+            }
+
+            // Đồng bộ tất cả các cặp
+            syncSliderAndInput('a2Slider', 'a2Input');
+            syncSliderAndInput('b2Slider', 'b2Input');
+            syncSliderAndInput('c2Slider', 'c2Input');
+            syncSliderAndInput('a3Slider', 'a3Input');
+            syncSliderAndInput('b3Slider', 'b3Input');
+            syncSliderAndInput('c3Slider', 'c3Input');
+            syncSliderAndInput('d3Slider', 'd3Input');
+
+            // Chuyển đổi hiển thị nhóm hệ số
+            functionTypeSelect.addEventListener('change', function() {
+                if (this.value === 'quadratic') {
+                    quadraticInputs.style.display = 'block';
+                    cubicInputs.style.display = 'none';
+                } else {
+                    quadraticInputs.style.display = 'none';
+                    cubicInputs.style.display = 'block';
+                }
+                drawGraph();
+            });
+
+            // Vẽ trục tọa độ
+            function drawAxes() {
+                const width = canvas.width;
+                const height = canvas.height;
+                const centerX = width / 2;
+                const centerY = height / 2;
+
+                ctx.clearRect(0, 0, width, height);
+
+                // Vẽ trục x
+                ctx.beginPath();
+                ctx.moveTo(0, centerY);
+                ctx.lineTo(width, centerY);
+                ctx.strokeStyle = '#333';
+                ctx.stroke();
+
+                // Vẽ trục y
+                ctx.beginPath();
+                ctx.moveTo(centerX, 0);
+                ctx.lineTo(centerX, height);
+                ctx.strokeStyle = '#333';
+                ctx.stroke();
+
+                // Vẽ chia vạch
+                ctx.fillStyle = '#666';
+                ctx.font = '10px Arial';
+                for (let i = -5; i <= 5; i++) {
+                    if (i === 0) continue;
+                    // Vạch ngang
+                    ctx.beginPath();
+                    ctx.moveTo(centerX + i * 50, centerY - 5);
+                    ctx.lineTo(centerX + i * 50, centerY + 5);
+                    ctx.stroke();
+                    ctx.fillText(i, centerX + i * 50 - 5, centerY + 20);
+
+                    // Vạch dọc
+                    ctx.beginPath();
+                    ctx.moveTo(centerX - 5, centerY - i * 50);
+                    ctx.lineTo(centerX + 5, centerY - i * 50);
+                    ctx.stroke();
+                    ctx.fillText(i, centerX + 10, centerY - i * 50 + 5);
+                }
+            }
+
+            // Vẽ đồ thị
+            function drawGraph() {
+                drawAxes();
+                const width = canvas.width;
+                const height = canvas.height;
+                const centerX = width / 2;
+                const centerY = height / 2;
+                const scaleX = 50; // 1 đơn vị = 50px
+                const scaleY = 50;
+
+                ctx.beginPath();
+                ctx.strokeStyle = '#e74c3c';
+                ctx.lineWidth = 2;
+
+                const type = functionTypeSelect.value;
+
+                // Xác định phạm vi vẽ: từ -6 đến 6
+                for (let px = 0; px < width; px++) {
+                    const x = (px - centerX) / scaleX;
+                    let y;
+
+                    if (type === 'quadratic') {
+                        const a = parseFloat(document.getElementById('a2Input').value);
+                        const b = parseFloat(document.getElementById('b2Input').value);
+                        const c = parseFloat(document.getElementById('c2Input').value);
+                        y = a * x * x + b * x + c;
+                    } else {
+                        const a = parseFloat(document.getElementById('a3Input').value);
+                        const b = parseFloat(document.getElementById('b3Input').value);
+                        const c = parseFloat(document.getElementById('c3Input').value);
+                        const d = parseFloat(document.getElementById('d3Input').value);
+                        y = a * x * x * x + b * x * x + c * x + d;
+                    }
+
+                    const py = centerY - y * scaleY;
+
+                    if (px === 0) {
+                        ctx.moveTo(px, py);
+                    } else {
+                        ctx.lineTo(px, py);
+                    }
+                }
+
+                ctx.stroke();
+            }
+
+            // Khởi tạo ban đầu
+            drawGraph();
+
+            // Gắn lại sự kiện thay đổi cho tất cả input
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', drawGraph);
+            });
+        });
+    </script>
+
+</body>
+</html>
