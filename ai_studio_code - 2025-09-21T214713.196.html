@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minh Họa Giao Của Hai Mặt Trụ</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 25px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        code {
+            background-color: #ecf0f1;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-family: "Courier New", Courier, monospace;
+        }
+        #canvas-container {
+            width: 100%;
+            height: 500px;
+            margin: 20px 0;
+            background-color: #000;
+            border-radius: 8px;
+            cursor: grab;
+        }
+        .note {
+            background-color: #eaf2f8;
+            border-left: 5px solid #3498db;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Bài Toán Giao Của Hai Mặt Trụ</h1>
+        <p>
+            Đây là minh họa cho ý tưởng "không gian nghiệm có cấu trúc" trong hình học đại số. Thay vì tìm các nghiệm riêng lẻ, chúng ta nghiên cứu toàn bộ đối tượng hình học được tạo ra từ giao của các bề mặt.
+        </p>
+        <p>Chúng ta xét giao của hai mặt trụ vô hạn có bán kính bằng 1, đặt vuông góc với nhau trong không gian 3 chiều:</p>
+        <ul>
+            <li>Mặt trụ thứ nhất (màu đỏ), có trục là trục Oz: <code>x² + y² = 1</code></li>
+            <li>Mặt trụ thứ hai (màu xanh), có trục là trục Oy: <code>x² + z² = 1</code></li>
+        </ul>
+
+        <div class="note">
+            <strong>Hướng dẫn:</strong> Bạn có thể dùng chuột để <b>xoay</b> (giữ chuột trái), <b>phóng to/thu nhỏ</b> (lăn chuột), và <b>di chuyển</b> (giữ chuột phải) mô hình 3D dưới đây.
+        </div>
+
+        <!-- Vùng chứa mô hình 3D -->
+        <div id="canvas-container"></div>
+
+        <h2>Phân Tích "Không Gian Nghiệm"</h2>
+        <p>
+            "Nghiệm" của hệ phương trình này không còn là một tập hợp các điểm rời rạc mà là một đối tượng hình học mới (đường cong màu vàng). Chúng ta có thể phân tích cấu trúc của nó như sau:
+        </p>
+        <ol>
+            <li>Từ hai phương trình ban đầu, ta có thể suy ra <code>y² = z²</code>, tức là <code>y = z</code> hoặc <code>y = -z</code>.</li>
+            <li>Điều này có nghĩa là toàn bộ giao tuyến phức tạp này thực chất nằm trên hai mặt phẳng đơn giản là <code>y = z</code> và <code>y = -z</code>.</li>
+            <li><strong>Kết quả:</strong> Không gian nghiệm được "bóc tách" thành hai phần, mỗi phần là một hình <strong>elip</strong> phẳng. Đường cong màu vàng bạn thấy chính là sự kết hợp của hai hình elip đó.</li>
+        </ol>
+        <p class="note">
+            <strong>Điểm kỳ dị (Singular Points):</strong> Tại hai điểm <code>(1, 0, 0)</code> và <code>(-1, 0, 0)</code>, hai hình elip này giao nhau. Tại đây, đường cong không "trơn tru" mà tự cắt chính nó. Đây là những điểm có cấu trúc đặc biệt, là đối tượng nghiên cứu quan trọng trong hình học đại số.
+        </p>
+    </div>
+
+    <!-- Nạp thư viện Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <script>
+        // --- Thiết lập cảnh 3D ---
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+        camera.position.set(2, 2, 3);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setClearColor(0x1a1a1a); // Nền tối
+        container.appendChild(renderer.domElement);
+
+        // --- Điều khiển camera ---
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+
+        // --- Ánh sáng ---
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(5, 10, 7.5);
+        scene.add(directionalLight);
+
+        // --- Hệ trục tọa độ ---
+        const axesHelper = new THREE.AxesHelper(3); // X: đỏ, Y: xanh lá, Z: xanh dương
+        scene.add(axesHelper);
+
+        // --- Vật liệu ---
+        const materialCylinder1 = new THREE.MeshPhongMaterial({
+            color: 0xff0000, // Đỏ
+            transparent: true,
+            opacity: 0.5,
+            side: THREE.DoubleSide
+        });
+        const materialCylinder2 = new THREE.MeshPhongMaterial({
+            color: 0x0000ff, // Xanh dương
+            transparent: true,
+            opacity: 0.5,
+            side: THREE.DoubleSide
+        });
+
+        // --- Tạo hai mặt trụ ---
+        const geometry = new THREE.CylinderGeometry(1, 1, 4, 64, 1, true); // Bán kính 1, cao 4
+
+        // Mặt trụ 1: x² + y² = 1 (trục Z)
+        const cylinder1 = new THREE.Mesh(geometry, materialCylinder1);
+        cylinder1.rotation.x = Math.PI / 2; // Xoay để trục của nó là trục Z
+        scene.add(cylinder1);
+
+        // Mặt trụ 2: x² + z² = 1 (trục Y)
+        const cylinder2 = new THREE.Mesh(geometry, materialCylinder2);
+        // Mặc định Three.js Cylinder có trục là Y, không cần xoay
+        scene.add(cylinder2);
+
+        // --- Vẽ đường giao tuyến ---
+        const points1 = [];
+        const points2 = [];
+        const segments = 128;
+        for (let i = 0; i <= segments; i++) {
+            const t = (i / segments) * Math.PI * 2;
+            const x = Math.cos(t);
+            const y = Math.sin(t);
+            // Từ y² = z² => z = ±y
+            const z1 = y;
+            const z2 = -y;
+            points1.push(new THREE.Vector3(x, y, z1));
+            points2.push(new THREE.Vector3(x, y, z2));
+        }
+
+        const curveGeometry1 = new THREE.BufferGeometry().setFromPoints(points1);
+        const curveGeometry2 = new THREE.BufferGeometry().setFromPoints(points2);
+        const curveMaterial = new THREE.LineBasicMaterial({ color: 0xffff00, linewidth: 3 }); // Vàng
+
+        const intersectionCurve1 = new THREE.Line(curveGeometry1, curveMaterial);
+        const intersectionCurve2 = new THREE.Line(curveGeometry2, curveMaterial);
+        scene.add(intersectionCurve1);
+        scene.add(intersectionCurve2);
+
+
+        // --- Vòng lặp Animation ---
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        // --- Xử lý thay đổi kích thước cửa sổ ---
+        window.addEventListener('resize', () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+
+        animate();
+    </script>
+
+</body>
+</html>
