@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vẽ Đồ Thị Hàm Số Bậc 2 & Bậc 3 (2 Hàm)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f9f9f9;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            min-width: 300px;
+        }
+        .graph {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            flex: 1;
+            min-width: 600px;
+            text-align: center;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            background: #fff;
+            margin-top: 15px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        input[type="range"], input[type="number"], select {
+            width: 100%;
+            margin-top: 5px;
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        select {
+            padding: 8px;
+        }
+        .coef-group {
+            margin: 10px 0;
+        }
+        .coef-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 3px;
+        }
+        .function-panel {
+            margin-top: 20px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+        .function-panel h3 {
+            margin-top: 0;
+            color: #2980b9;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+        .color-indicator {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+        #toggle2nd {
+            margin: 15px 0;
+            padding: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>📈 Vẽ Đồ Thị Hàm Số Bậc 2 & Bậc 3 — Hỗ Trợ 2 Hàm</h1>
+
+    <div class="container">
+        <!-- Bảng điều khiển -->
+        <div class="controls">
+            <label>
+                <input type="checkbox" id="toggle2nd" checked> Hiển thị hàm số thứ hai
+            </label>
+
+            <!-- Hàm số thứ nhất -->
+            <div class="function-panel" style="border-color: #e74c3c; background-color: #fdf2f0;">
+                <h3><span class="color-indicator" style="background-color: #e74c3c;"></span> Hàm số thứ nhất</h3>
+                <label for="functionType1">Loại hàm số:</label>
+                <select id="functionType1">
+                    <option value="quadratic">Bậc 2: y = ax² + bx + c</option>
+                    <option value="cubic">Bậc 3: y = ax³ + bx² + cx + d</option>
+                </select>
+
+                <!-- Hệ số bậc 2 - Hàm 1 -->
+                <div id="quadraticInputs1">
+                    <div class="coef-group">
+                        <label for="a21">Hệ số a:</label>
+                        <input type="range" id="a21Slider" min="-5" max="5" step="1" value="1">
+                        <input type="number" id="a21Input" value="1" min="-10" max="10" step="1">
+                        <div class="coef-label">
+                            <span>a = -5</span>
+                            <span>a = 5</span>
+                        </div>
+                    </div>
+                    <div class="coef-group">
+                        <label for="b21">Hệ số b:</label>
+                        <input type="range" id="b21Slider" min="-5" max="5" step="1" value="0">
+                        <input type="number" id="b21Input" value="0" min="-10" max="10" step="1">
+                        <div class="coef-label">
+                            <span>b = -5</span>
+                            <span>b = 5</span>
+                        </div>
+                    </div>
+                    <div class="coef-group">
+                        <label for="c21">Hệ số c:</label>
+                        <input type="range" id="c21Slider" min="-5" max="5" step="1" value="0">
+                        <input type="number" id="c21Input" value="0" min="-10" max="10" step="1">
+                        <div class="coef-label">
+                            <span>c = -5</span>
+                            <span>c = 5</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hệ số bậc 3 - Hàm 1 -->
+                <div id="cubicInputs1" style="display: none;">
+                    <div class="coef-group">
+                        <label for="a31">Hệ số a:</label>
+                        <input type="range" id="a31Slider" min="-3" max="3" step="1" value="1">
+                        <input type="number" id="a31Input" value="1" min="-5" max="5" step="1">
+                        <div class="coef-label">
+                            <span>a = -3</span>
+                            <span>a = 3</span>
+                        </div>
+                    </div>
+                    <div class="coef-group">
+                        <label for="b31">Hệ số b:</label>
+                        <input type="range" id="b31Slider" min="-5" max="5" step="1" value="0">
+                        <input type="number" id="b31Input" value="0" min="-10" max="10" step="1">
+                        <div class="coef-label">
+                            <span>b = -5</span>
+                            <span>b = 5</span>
+                        </div>
+                    </div>
+                    <div class="coef-group">
+                        <label for="c31">Hệ số c:</label>
+                        <input type="range" id="c31Slider" min="-5" max="5" step="1" value="0">
+                        <input type="number" id="c31Input" value="0" min="-10" max="10" step="1">
+                        <div class="coef-label">
+                            <span>c = -5</span>
+                            <span>c = 5</span>
+                        </div>
+                    </div>
+                    <div class="coef-group">
+                        <label for="d31">Hệ số d:</label>
+                        <input type="range" id="d31Slider" min="-5" max="5" step="1" value="0">
+                        <input type="number" id="d31Input" value="0" min="-10" max="10" step="1">
+                        <div class="coef-label">
+                            <span>d = -5</span>
+                            <span>d = 5</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hàm số thứ hai -->
+            <div class="function-panel" id="panel2" style="border-color: #27ae60; background-color: #f2fdf5;">
+                <h3><span class="color-indicator" style="background-color: #27ae60;"></span> Hàm số thứ hai</h3>
+                <label for="functionType2">Loại hàm số:</label>
+                <select id="functionType2">
+                    <option value="quadratic">Bậc 2: y = ax² + bx + c</option>
+                    <option value="cubic" selected>Bậc 3: y = ax³ + bx² + cx + d</option>
+                </select>
+
+                <!-- Hệ số bậc 2 - Hàm 2 -->
+                <div id="quadraticInputs2">
+                    <div class="coef-group">
+                        <label for="a22">Hệ số a:</label>
+                        <input type="range" id="a22Slider" min="-5" max="5" step="1" value="-1">
+                        <input type="number" id="a22Input" value="-1" min="-10" max="10" step="1">
+                        <div class="coef-label">
+                            <span>a = -5</span>
+                            <span>a = 5</span>
+                        </div>
+                    </div>
+                    <div class="coef-group">
+                        <label for="b22">Hệ số b:</label>
+                        <input type="range" id="b22Slider" min="-5" max="5" step="1" value="0">
+                        <input type="number" id="b22Input" value="0" min="-10" max="10" step="1">
+                        <div class="coef-label">
+                            <span>b = -5</span>
+                            <span>b = 5</span>
+                        </div>
+                    </div>
+                    <div class="coef-group">
+                        <label for="c22">Hệ số c:</label>
+                        <input type="range" id="c22Slider" min="-5" max="5" step="1" value="2">
+                        <input type="number" id="c22Input" value="2" min="-10" max="10" step="1">
+                        <div class="coef-label">
+                            <span>c = -5</span>
+                            <span>c = 5</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hệ số bậc 3 - Hàm 2 -->
+                <div id="cubicInputs2" style="display: none;">
+                    <div class="coef-group">
+                        <label for="a32">Hệ số a:</label>
+                        <input type="range" id="a32Slider" min="-3" max="3" step="1" value="1">
+                        <input type="number" id="a32Input" value="1" min="-5" max="5" step="1">
+                        <div class="coef-label">
+                            <span>a = -3</span>
+                            <span>a = 3</span>
+                        </div>
+                    </div>
+                    <div class="coef-group">
+                        <label for="b32">Hệ số b:</label>
+                        <input type="range" id="b32Slider" min="-5" max="5" step="1" value="0">
+                        <input type="number" id="b32Input" value="0" min="-10" max="10" step="1">
+                        <div class="coef-label">
+                            <span>b = -5</span>
+                            <span>b = 5</span>
+                        </div>
+                    </div>
+                    <div class="coef-group">
+                        <label for="c32">Hệ số c:</label>
+                        <input type="range" id="c32Slider" min="-5" max="5" step="1" value="0">
+                        <input type="number" id="c32Input" value="0" min="-10" max="10" step="1">
+                        <div class="coef-label">
+                            <span>c = -5</span>
+                            <span>c = 5</span>
+                        </div>
+                    </div>
+                    <div class="coef-group">
+                        <label for="d32">Hệ số d:</label>
+                        <input type="range" id="d32Slider" min="-5" max="5" step="1" value="0">
+                        <input type="number" id="d32Input" value="0" min="-10" max="10" step="1">
+                        <div class="coef-label">
+                            <span>d = -5</span>
+                            <span>d = 5</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vùng vẽ đồ thị -->
+        <div class="graph">
+            <h2>Đồ thị hàm số</h2>
+            <canvas id="graphCanvas" width="700" height="500"></canvas>
+            <p><small>
+                <span class="color-indicator" style="background-color: #e74c3c;"></span> Hàm 1 &nbsp;&nbsp;
+                <span class="color-indicator" style="background-color: #27ae60;"></span> Hàm 2
+            </small></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('graphCanvas');
+            const ctx = canvas.getContext('2d');
+            const toggle2nd = document.getElementById('toggle2nd');
+
+            // Hàm đồng bộ slider và input
+            function syncSliderAndInput(sliderId, inputId) {
+                const slider = document.getElementById(sliderId);
+                const input = document.getElementById(inputId);
+
+                slider.addEventListener('input', () => {
+                    input.value = slider.value;
+                    drawGraph();
+                });
+
+                input.addEventListener('input', () => {
+                    slider.value = input.value;
+                    drawGraph();
+                });
+            }
+
+            // Đồng bộ tất cả hệ số
+            const sliders = [
+                ['a21Slider', 'a21Input'], ['b21Slider', 'b21Input'], ['c21Slider', 'c21Input'],
+                ['a31Slider', 'a31Input'], ['b31Slider', 'b31Input'], ['c31Slider', 'c31Input'], ['d31Slider', 'd31Input'],
+                ['a22Slider', 'a22Input'], ['b22Slider', 'b22Input'], ['c22Slider', 'c22Input'],
+                ['a32Slider', 'a32Input'], ['b32Slider', 'b32Input'], ['c32Slider', 'c32Input'], ['d32Slider', 'd32Input']
+            ];
+
+            sliders.forEach(pair => syncSliderAndInput(pair[0], pair[1]));
+
+            // Xử lý chuyển đổi loại hàm cho từng hàm
+            function setupFunctionToggle(typeSelectId, quadInputsId, cubicInputsId) {
+                const typeSelect = document.getElementById(typeSelectId);
+                const quadInputs = document.getElementById(quadInputsId);
+                const cubicInputs = document.getElementById(cubicInputsId);
+
+                typeSelect.addEventListener('change', () => {
+                    if (typeSelect.value === 'quadratic') {
+                        quadInputs.style.display = 'block';
+                        cubicInputs.style.display = 'none';
+                    } else {
+                        quadInputs.style.display = 'none';
+                        cubicInputs.style.display = 'block';
+                    }
+                    drawGraph();
+                });
+            }
+
+            setupFunctionToggle('functionType1', 'quadraticInputs1', 'cubicInputs1');
+            setupFunctionToggle('functionType2', 'quadraticInputs2', 'cubicInputs2');
+
+            // Toggle ẩn/hiện hàm thứ 2
+            toggle2nd.addEventListener('change', drawGraph);
+
+            // Vẽ trục tọa độ
+            function drawAxes() {
+                const width = canvas.width;
+                const height = canvas.height;
+                const centerX = width / 2;
+                const centerY = height / 2;
+
+                ctx.clearRect(0, 0, width, height);
+
+                // Vẽ trục x
+                ctx.beginPath();
+                ctx.moveTo(0, centerY);
+                ctx.lineTo(width, centerY);
+                ctx.strokeStyle = '#333';
+                ctx.stroke();
+
+                // Vẽ trục y
+                ctx.beginPath();
+                ctx.moveTo(centerX, 0);
+                ctx.lineTo(centerX, height);
+                ctx.strokeStyle = '#333';
+                ctx.stroke();
+
+                // Vẽ chia vạch
+                ctx.fillStyle = '#666';
+                ctx.font = '10px Arial';
+                for (let i = -8; i <= 8; i++) {
+                    if (i === 0) continue;
+                    // Vạch ngang (trục x)
+                    ctx.beginPath();
+                    ctx.moveTo(centerX + i * 50, centerY - 5);
+                    ctx.lineTo(centerX + i * 50, centerY + 5);
+                    ctx.stroke();
+                    if (i % 2 === 0) ctx.fillText(i, centerX + i * 50 - 5, centerY + 20);
+
+                    // Vạch dọc (trục y)
+                    ctx.beginPath();
+                    ctx.moveTo(centerX - 5, centerY - i * 50);
+                    ctx.lineTo(centerX + 5, centerY - i * 50);
+                    ctx.stroke();
+                    if (i % 2 === 0) ctx.fillText(i, centerX + 10, centerY - i * 50 + 5);
+                }
+            }
+
+            // Tính giá trị hàm số
+            function calculateY(x, funcType, coeffs) {
+                if (funcType === 'quadratic') {
+                    const { a, b, c } = coeffs;
+                    return a * x * x + b * x + c;
+                } else {
+                    const { a, b, c, d } = coeffs;
+                    return a * x * x * x + b * x * x + c * x + d;
+                }
+            }
+
+            // Vẽ đồ thị
+            function drawGraph() {
+                drawAxes();
+                const width = canvas.width;
+                const height = canvas.height;
+                const centerX = width / 2;
+                const centerY = height / 2;
+                const scaleX = 50;
+                const scaleY = 50;
+
+                // --- VẼ HÀM THỨ NHẤT ---
+                const type1 = document.getElementById('functionType1').value;
+                let coeffs1;
+                if (type1 === 'quadratic') {
+                    coeffs1 = {
+                        a: parseFloat(document.getElementById('a21Input').value),
+                        b: parseFloat(document.getElementById('b21Input').value),
+                        c: parseFloat(document.getElementById('c21Input').value)
+                    };
+                } else {
+                    coeffs1 = {
+                        a: parseFloat(document.getElementById('a31Input').value),
+                        b: parseFloat(document.getElementById('b31Input').value),
+                        c: parseFloat(document.getElementById('c31Input').value),
+                        d: parseFloat(document.getElementById('d31Input').value)
+                    };
+                }
+
+                ctx.beginPath();
+                ctx.strokeStyle = '#e74c3c'; // đỏ
+                ctx.lineWidth = 2.5;
+
+                for (let px = 0; px < width; px++) {
+                    const x = (px - centerX) / scaleX;
+                    const y = calculateY(x, type1, coeffs1);
+                    const py = centerY - y * scaleY;
+
+                    if (px === 0) {
+                        ctx.moveTo(px, py);
+                    } else {
+                        ctx.lineTo(px, py);
+                    }
+                }
+                ctx.stroke();
+
+                // --- VẼ HÀM THỨ HAI (nếu được bật) ---
+                if (toggle2nd.checked) {
+                    const type2 = document.getElementById('functionType2').value;
+                    let coeffs2;
+                    if (type2 === 'quadratic') {
+                        coeffs2 = {
+                            a: parseFloat(document.getElementById('a22Input').value),
+                            b: parseFloat(document.getElementById('b22Input').value),
+                            c: parseFloat(document.getElementById('c22Input').value)
+                        };
+                    } else {
+                        coeffs2 = {
+                            a: parseFloat(document.getElementById('a32Input').value),
+                            b: parseFloat(document.getElementById('b32Input').value),
+                            c: parseFloat(document.getElementById('c32Input').value),
+                            d: parseFloat(document.getElementById('d32Input').value)
+                        };
+                    }
+
+                    ctx.beginPath();
+                    ctx.strokeStyle = '#27ae60'; // xanh lá
+                    ctx.lineWidth = 2.5;
+
+                    for (let px = 0; px < width; px++) {
+                        const x = (px - centerX) / scaleX;
+                        const y = calculateY(x, type2, coeffs2);
+                        const py = centerY - y * scaleY;
+
+                        if (px === 0) {
+                            ctx.moveTo(px, py);
+                        } else {
+                            ctx.lineTo(px, py);
+                        }
+                    }
+                    ctx.stroke();
+                }
+            }
+
+            // Khởi tạo ban đầu
+            drawGraph();
+
+            // Gắn lại sự kiện thay đổi cho tất cả input và select
+            document.querySelectorAll('input, select').forEach(el => {
+                el.addEventListener('input', drawGraph);
+            });
+        });
+    </script>
+
+</body>
+</html>
